@@ -134,18 +134,22 @@ export async function run(config_dir: string, rawConfig: LaunchConfig) {
 		let account = parachainAccount(resolvedId);
 
 		for (const node of parachain.nodes) {
-			const { wsPort, port, flags, name, basePath, rpcPort } = node;
-			console.log(
-				`Starting a Collator for parachain ${resolvedId}: ${account}, Collator port : ${port} wsPort : ${wsPort} rpcPort : ${rpcPort}`
-			);
-			await startCollator(bin, wsPort, rpcPort, port, {
-				name,
-				spec,
-				flags,
-				chain: paraChain,
-				basePath,
-				onlyOneParachainNode: parachain.nodes.length === 1,
-			});
+			try {
+				const { wsPort, port, flags, name, basePath, rpcPort } = node;
+				console.log(
+					`Starting a Collator for parachain ${resolvedId}: ${account}, Collator port : ${port} wsPort : ${wsPort} rpcPort : ${rpcPort}`
+				);
+				await startCollator(bin, wsPort, rpcPort, port, {
+					name,
+					spec,
+					flags,
+					chain: paraChain,
+					basePath,
+					onlyOneParachainNode: parachain.nodes.length === 1,
+				});
+			} catch (ex) {
+				console.log("failed to start collator!", ex);
+			}
 		}
 
 		// Allow time for the TX to complete, avoiding nonce issues.

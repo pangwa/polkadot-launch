@@ -45,19 +45,22 @@
 			"nodes": [
 				{
 					"wsPort": 9988,
+					"rpcPort": 19988,
 					"port": 31200,
 					"name": "alice",
-					"flags": ["-lxcm", "--", "--execution=wasm"]
+					"flags": ["--unsafe-ws-external", "--rpc-cors", "all", "--rpc-methods", "unsafe", "-lxcm", "--", "--execution=wasm"]
 				}, {
 					"wsPort": 9989,
+					"rpcPort": 19989,
 					"port": 31202,
 					"name": "bob",
-					"flags": ["--", "--execution=wasm"]
+					"flags": [ "--", "--execution=wasm"]
 				},{
 					"wsPort": 9990,
+					"rpcPort": 19990,
 					"port": 31203,
 					"name": "dave",
-					"flags": ["--", "--execution=wasm"]
+					"flags": [ "--", "--execution=wasm"]
 				}
 			]
 		}

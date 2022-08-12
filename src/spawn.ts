@@ -77,16 +77,20 @@ export async function getParachainIdFromSpec(
 		p["spec"] = spawn(bin, args);
 		verbose(bin, args);
 		p["spec"].stdout.on("data", (chunk) => {
+			console.log("getting spec data");
 			data += chunk;
 		});
 
 		p["spec"].stderr.pipe(process.stderr);
+		console.log("getting spec");
 
 		p["spec"].on("close", () => {
+			console.log("here1");
 			resolve(data);
 		});
 
 		p["spec"].on("error", (err) => {
+			console.log("here2");
 			reject(err);
 		});
 	});
@@ -255,13 +259,16 @@ export function startCollator(
 		verbose(bin, args);
 		p[wsPort] = spawn(bin, args);
 
+		console.log("spaw done");
 		let log = fs.createWriteStream(`${wsPort}.log`);
 
 		p[wsPort].stdout.pipe(log);
+		let ready = false;
 		p[wsPort].stderr.on("data", function (chunk) {
 			let message = chunk.toString();
-			let ready =
-				message.includes("Running JSON-RPC WS server:") ||
+			ready =
+				ready ||
+				message.includes("New epoch") ||
 				message.includes("Listening for new connections");
 			if (ready) {
 				resolve();
